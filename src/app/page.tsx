@@ -2,19 +2,50 @@
 
 import React, { useState, useEffect } from 'react';
 import { saveAs } from 'file-saver';
-import { GeneralConfig } from '@/components/fleet/GeneralConfig';
-import { CreditsConfig } from '@/components/fleet/CreditsConfig';
-import { PolygonConfig } from '@/components/fleet/PolygonConfig';
-import { PricingModel } from '@/components/fleet/PricingModel';
-import { ResultsTable } from '@/components/fleet/ResultsTable';
-import { SummaryCards } from '@/components/fleet/SummaryCards';
+import GeneralConfig from './components/general-config';
+import CreditsConfig from './components/credits-config';
+import PolygonConfig from './components/polygon-config';
+import { PricingModel } from './components/pricing-model';
+import { ResultsTable } from './components/results-table';
+import { SummaryCards } from './components/summary-cards';
+import { FinancialAnalysis } from './components/financial-analysis';
+import { CostBreakdown } from './components/cost-breakdown';
+
+interface Flota {
+  id: number;
+  dispositivos: number;
+  transMes: number;
+  costoCredits: number;
+  costoPolygon: number;
+  ingreso: number;
+  roiCredits: number;
+  roiPolygon: number;
+  descuento: number;
+}
+
+interface Totales {
+  credits: {
+    costo: number;
+    ingreso: number;
+    ganancia: number;
+    roi: number;
+    recuperacion: number | null;
+  };
+  polygon: {
+    costo: number;
+    ingreso: number;
+    ganancia: number;
+    roi: number;
+    recuperacion: number | null;
+  };
+}
 
 export default function FleetCalculatorPage() {
   const [config, setConfig] = useState({
     numFlotas: 10,
-    dispositivosFlota: 50,
+    dispositivosFlota: 10,
     transaccionesDia: 24,
-    precioDispositivo: 100,
+    precioDispositivo: 147.5,
     numNodos: 4,
     costoAWSNodo: 150,
     comisionCredits: 0.001,
@@ -23,7 +54,7 @@ export default function FleetCalculatorPage() {
     precioMatic: 0.9,
     comisionPolygon: 0.002,
     infraPolygon: 200,
-    costoPlanDatos: 5,
+    costoPlanDatos: 10,
     mbTransaccion: 0.1,
     planServicio: 'estandar',
     tarifaBaseFija: 149,
@@ -31,13 +62,37 @@ export default function FleetCalculatorPage() {
     descuento100: 10,
     descuento500: 20,
     descuento1000: 30,
+    // Propiedades adicionales necesarias para los componentes
+    dispositivoSeleccionado: 'edgebox-esp100',
+    soporteLatAm: 0.145,
+    mbPorTransaccion: 0.1,
+    transaccionesBlockchainDia: 7,
+    tipoFacturacionBlockchain: 'por_evento',
+    factorEscala: 0,
+    costoInstalacion: 50,
+    costoMantenimientoDispositivo: 10,
   });
 
-  const [resultados, setResultados] = useState({
+  const [resultados, setResultados] = useState<{
+    flotas: Flota[];
+    totales: Totales;
+  }>({
     flotas: [],
     totales: {
-      credits: {},
-      polygon: {},
+      credits: {
+        costo: 0,
+        ingreso: 0,
+        ganancia: 0,
+        roi: 0,
+        recuperacion: null,
+      },
+      polygon: {
+        costo: 0,
+        ingreso: 0,
+        ganancia: 0,
+        roi: 0,
+        recuperacion: null,
+      },
     },
   });
 
@@ -47,20 +102,21 @@ export default function FleetCalculatorPage() {
     avanzado: { fija: 399, porDispositivo: 1 },
   };
 
-  const actualizarTarifas = (plan) => {
-    if (plan !== 'custom' && planes[plan]) {
+  const actualizarTarifas = (plan: string) => {
+    if (plan !== 'custom' && planes[plan as keyof typeof planes]) {
+      const planData = planes[plan as keyof typeof planes];
       setConfig((prev) => ({
         ...prev,
         planServicio: plan,
-        tarifaBaseFija: planes[plan].fija,
-        tarifaBase: planes[plan].porDispositivo,
+        tarifaBaseFija: planData.fija,
+        tarifaBase: planData.porDispositivo,
       }));
     } else {
       setConfig((prev) => ({ ...prev, planServicio: plan }));
     }
   };
 
-  const calcularDescuento = (totalDispositivos) => {
+  const calcularDescuento = (totalDispositivos: number) => {
     if (totalDispositivos >= 1000) return config.descuento1000;
     if (totalDispositivos >= 500) return config.descuento500;
     if (totalDispositivos >= 100) return config.descuento100;
@@ -79,21 +135,24 @@ export default function FleetCalculatorPage() {
 
     for (let i = 1; i <= config.numFlotas; i++) {
       totalDispositivos += config.dispositivosFlota;
-      const transMes = config.dispositivosFlota * config.transaccionesDia * 30;
+      const transMes = config.dispositivosFlota * config.transaccionesBlockchainDia * 30;
       const desc = calcularDescuento(totalDispositivos);
       const tarifaDesc = config.tarifaBase * (1 - desc / 100);
       const datos = config.dispositivosFlota * config.costoPlanDatos;
       const costoTxCredits = transMes * config.comisionCredits;
-      const costoTxPolygon = transMes * (config.gasPolygon * config.precioMatic + config.comisionPolygon);
+      const costoGasPolygon = transMes * (config.gasPolygon * config.precioMatic);
+      const comisionPolygonIngreso = transMes * config.comisionPolygon;
       const costoCredits = datos + costoTxCredits + fijosCredits / config.numFlotas;
-      const costoPolygon = datos + costoTxPolygon + fijosPolygon / config.numFlotas;
-      const ingreso = config.tarifaBaseFija + config.dispositivosFlota * tarifaDesc;
-      const roiCredits = ((ingreso - costoCredits) / costoCredits) * 100;
-      const roiPolygon = ((ingreso - costoPolygon) / costoPolygon) * 100;
+      const costoPolygon = datos + costoGasPolygon + fijosPolygon / config.numFlotas;
+      const ingresoBase = config.tarifaBaseFija + config.dispositivosFlota * tarifaDesc;
+      const ingresoCredits = ingresoBase; // Credits solo tiene ingreso base
+      const ingresoPolygon = ingresoBase + comisionPolygonIngreso; // Polygon suma comisiones SC
+      const roiCredits = ((ingresoCredits - costoCredits) / costoCredits) * 100;
+      const roiPolygon = ((ingresoPolygon - costoPolygon) / costoPolygon) * 100;
 
       totalCredits += costoCredits;
       totalPolygon += costoPolygon;
-      ingresoTotal += ingreso;
+      ingresoTotal += ingresoCredits; // Usamos ingresoCredits para el total base
       inversion += config.dispositivosFlota * config.precioDispositivo;
 
       flotas.push({
@@ -102,15 +161,18 @@ export default function FleetCalculatorPage() {
         transMes,
         costoCredits,
         costoPolygon,
-        ingreso,
+        ingreso: ingresoCredits, // Mostramos el ingreso base en la tabla
         roiCredits,
         roiPolygon,
         descuento: desc,
       });
     }
 
+    // Calcular ingreso total de Polygon (incluye comisiones SC)
+    const ingresoTotalPolygon = ingresoTotal + (config.numFlotas * config.dispositivosFlota * config.transaccionesBlockchainDia * 30 * config.comisionPolygon);
+    
     const gananciaCredits = ingresoTotal - totalCredits;
-    const gananciaPolygon = ingresoTotal - totalPolygon;
+    const gananciaPolygon = ingresoTotalPolygon - totalPolygon;
 
     setResultados({
       flotas,
@@ -120,14 +182,14 @@ export default function FleetCalculatorPage() {
           ingreso: ingresoTotal,
           ganancia: gananciaCredits,
           roi: (gananciaCredits / totalCredits) * 100,
-          recuperacion: gananciaCredits > 0 ? inversion / gananciaCredits : null,
+          recuperacion: gananciaCredits > 0 ? inversion / (gananciaCredits * 12) : null, // Recuperación en años
         },
         polygon: {
           costo: totalPolygon,
-          ingreso: ingresoTotal,
+          ingreso: ingresoTotalPolygon,
           ganancia: gananciaPolygon,
           roi: (gananciaPolygon / totalPolygon) * 100,
-          recuperacion: gananciaPolygon > 0 ? inversion / gananciaPolygon : null,
+          recuperacion: gananciaPolygon > 0 ? inversion / (gananciaPolygon * 12) : null, // Recuperación en años
         },
       },
     });
@@ -155,17 +217,40 @@ export default function FleetCalculatorPage() {
   }, [config]);
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-slate-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-600">
-          Calculadora de Flotas Blockchain
+          Tabulador Costos Blockchain Model Business
         </h1>
-        <GeneralConfig config={config} setConfig={setConfig} />
-        <CreditsConfig config={config} setConfig={setConfig} />
-        <PolygonConfig config={config} setConfig={setConfig} />
+        <GeneralConfig 
+          config={config} 
+          updateConfig={(key: any, value: any) => setConfig(prev => ({ ...prev, [key]: value }))}
+          cambiarPlan={actualizarTarifas}
+          isExpanded={true}
+          onToggle={() => {}}
+          planes={{
+            basico: { fija: 49, porDispositivo: 2, nombre: 'Básico' },
+            estandar: { fija: 149, porDispositivo: 15, nombre: 'Estándar' },
+            avanzado: { fija: 399, porDispositivo: 1, nombre: 'Avanzado/Premium' }
+          }}
+        />
+        <CreditsConfig 
+          config={config} 
+          updateConfig={(key: any, value: any) => setConfig(prev => ({ ...prev, [key]: value }))}
+          isExpanded={true}
+          onToggle={() => {}}
+        />
+        <PolygonConfig 
+          config={config} 
+          updateConfig={(key: any, value: any) => setConfig(prev => ({ ...prev, [key]: value }))}
+          isExpanded={true}
+          onToggle={() => {}}
+        />
         <PricingModel config={config} setConfig={setConfig} actualizarTarifas={actualizarTarifas} />
+        <CostBreakdown config={config} />
         <ResultsTable flotas={resultados.flotas} />
         <SummaryCards totales={resultados.totales} />
+        <FinancialAnalysis totales={resultados.totales} config={config} />
         <div className="text-center mt-10">
           <button onClick={exportarCSV} className="bg-gradient-to-r from-indigo-500 to-purple-500 px-6 py-3 rounded-xl text-white font-semibold hover:shadow-lg">
             Exportar CSV 📥

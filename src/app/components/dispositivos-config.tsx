@@ -122,13 +122,7 @@ const DispositivosConfig: React.FC<DispositivosConfigProps> = ({
     }
   ];
 
-  const industriasUseCase = [
-    { id: 'logistica', name: 'Logística y Transporte', dispositivos: ['queclink-gv600', 'teltonika-fmb125', 'ruptela-fm-pro4'] },
-    { id: 'assets', name: 'Asset Tracking', dispositivos: ['queclink-gv600', 'calamp-ttu2830', 'digital-matter-oyster2'] },
-    { id: 'vehicular', name: 'Gestión Vehicular', dispositivos: ['teltonika-fmb125', 'ruptela-fm-pro4'] },
-    { id: 'industrial', name: 'IoT Industrial', dispositivos: ['edgebox-esp100', 'calamp-ttu2830'] },
-    { id: 'agricultura', name: 'AgTech', dispositivos: ['queclink-gv600', 'digital-matter-oyster2'] }
-  ];
+
 
   const handleDeviceChange = (deviceId: string) => {
     const device = dispositivos.find(d => d.id === deviceId);
@@ -156,35 +150,6 @@ const DispositivosConfig: React.FC<DispositivosConfigProps> = ({
       
       {isExpanded && (
         <div className="mt-6">
-          {/* Selector de Industria */}
-          <div className="mb-6 bg-green-500/5 border border-green-500/20 rounded-lg p-4">
-            <h3 className="text-lg font-medium text-green-300 mb-4">📋 Selección por Industria</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {industriasUseCase.map((industria) => (
-                <div key={industria.id} className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
-                  <h4 className="font-medium text-green-300 text-sm mb-2">{industria.name}</h4>
-                  <div className="space-y-1">
-                    {industria.dispositivos.map(deviceId => {
-                      const device = dispositivos.find(d => d.id === deviceId);
-                      return (
-                        <button
-                          key={deviceId}
-                          onClick={() => handleDeviceChange(deviceId)}
-                          className={`w-full text-left text-xs p-2 rounded transition-colors ${
-                            config.dispositivoSeleccionado === deviceId 
-                              ? 'bg-green-500/20 text-green-300 border border-green-500/30' 
-                              : 'bg-white/5 text-gray-300 hover:bg-white/10'
-                          }`}
-                        >
-                          {device?.name} - ${device?.avgPrice}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Selección de Dispositivo */}
