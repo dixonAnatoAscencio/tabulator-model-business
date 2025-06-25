@@ -43,7 +43,7 @@ interface Totales {
 export default function FleetCalculatorPage() {
   const [config, setConfig] = useState({
     numFlotas: 10,
-          dispositivosFlota: 10,
+          dispositivosFlota: 1,
       transaccionesDia: 24,
       precioDispositivo: 147.5,
     numNodos: 4,

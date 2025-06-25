@@ -9,7 +9,7 @@
 ```typescript
 const configDefaults = {
   numFlotas: 10,                    // Número de flotas a analizar
-  dispositivosFlota: 10,            // Dispositivos por flota
+  dispositivosFlota: 1,             // Dispositivos por flota (ACTUALIZADO)
   transaccionesDia: 24,             // Eventos IoT por día (ej: GPS cada hora)
   precioDispositivo: 147.5,         // Precio unitario del dispositivo (EdgeBox-ESP-100)
   costoPlanDatos: 10,               // Costo mensual del plan SIM
@@ -17,6 +17,64 @@ const configDefaults = {
   diasPorMes: 30,                   // Días considerados por mes
   mesesPorAno: 12                   // Meses por año
 }
+```
+
+#### Fórmulas Detalladas
+
+**Cálculo base de transacciones blockchain por mes:**
+```
+TransaccionesBlockchainMes = dispositivosFlota × transaccionesBlockchainDia × diasPorMes
+```
+
+#### Construcción de Fórmulas Paso a Paso
+
+**1. Costo de Conectividad:**
+```
+CostoSIM = dispositivosFlota × costoPlanDatos
+```
+
+**2. Costo de Transacciones Blockchain:**
+```
+Credits: CostoTX = (dispositivosFlota × transaccionesBlockchainDia × 30) × comisionCredits
+Polygon: CostoGas = (dispositivosFlota × transaccionesBlockchainDia × 30) × (gasPolygon × precioMatic)
+```
+
+**3. Costo de Infraestructura por Flota:**
+```
+Credits: InfraFlota = (numNodos × costoAWSNodo + mantenimientoCredits) ÷ numFlotas
+Polygon: InfraFlota = infraPolygon ÷ numFlotas
+```
+
+**4. Costo Total por Flota:**
+```
+Credits: CostoTotal = CostoSIM + CostoTX + InfraFlota
+Polygon: CostoTotal = CostoSIM + CostoGas + InfraFlota
+```
+
+**5. Ingresos por Flota:**
+```
+IngresoBase = tarifaBaseFija + (dispositivosFlota × tarifaBase)
+Credits: Ingreso = IngresoBase
+Polygon: Ingreso = IngresoBase + ComisionesSmartContract
+```
+
+**6. ROI por Flota:**
+```
+Ganancia = Ingreso - CostoTotal
+ROI = (Ganancia ÷ CostoTotal) × 100
+```
+
+**7. CAPEX:**
+```
+DispositivosInversion = numFlotas × dispositivosFlota × precioDispositivo
+Credits: CAPEX = DispositivosInversion + (numNodos × costoAWSNodo × 12)
+Polygon: CAPEX = DispositivosInversion + (infraPolygon × 12)
+```
+
+**8. Período de Recuperación:**
+```
+GananciaAnual = Ganancia × 12
+PaybackPeriod = CAPEX ÷ GananciaAnual
 ```
 
 #### Plan de Servicios
@@ -48,18 +106,18 @@ Infraestructura = (numNodos × costoAWSNodo) + mantenimientoCredits
 Infraestructura = (4 × $150) + $500 = $1,100/mes
 ```
 
-**Costos por Flota:**
+**Costos por Flota (1 dispositivo):**
 ```
 Plan SIM = dispositivosFlota × costoPlanDatos
-Plan SIM = 10 × $10 = $100/mes
+Plan SIM = 1 × $10 = $10/mes
 
 Transacciones Blockchain = dispositivosFlota × transaccionesBlockchainDia × diasPorMes × comisionCredits
-Transacciones Blockchain = 10 × 7 × 30 × $0.001 = $2.1/mes
+Transacciones Blockchain = 1 × 7 × 30 × $0.001 = $0.21/mes
 
 Infraestructura por Flota = costosFijosCredits ÷ numFlotas
 Infraestructura por Flota = $1,100 ÷ 10 = $110/mes
 
-COSTO TOTAL POR FLOTA = $100 + $2.1 + $110 = $212.1/mes
+COSTO TOTAL POR FLOTA = $10 + $0.21 + $110 = $120.21/mes
 ```
 
 ### 3. Configuración Polygon
@@ -76,23 +134,23 @@ const polygonDefaults = {
 
 #### Cálculos Polygon
 
-**Costos por Flota:**
+**Costos por Flota (1 dispositivo):**
 ```
-Plan SIM = 10 × $10 = $100/mes (mismo que Credits)
+Plan SIM = 1 × $10 = $10/mes (mismo que Credits)
 
 Gas Blockchain = dispositivosFlota × transaccionesBlockchainDia × diasPorMes × (gasPolygon × precioMatic)
-Gas Blockchain = 10 × 7 × 30 × ($0.001 × $0.90) = $1.89/mes
+Gas Blockchain = 1 × 7 × 30 × ($0.001 × $0.90) = $0.189/mes
 
 Infraestructura por Flota = infraPolygon ÷ numFlotas
 Infraestructura por Flota = $200 ÷ 10 = $20/mes
 
-COSTO TOTAL POR FLOTA = $100 + $1.89 + $20 = $121.89/mes
+COSTO TOTAL POR FLOTA = $10 + $0.189 + $20 = $30.189/mes
 ```
 
 **Ingresos Adicionales Polygon:**
 ```
 Comisiones Smart Contract = dispositivosFlota × transaccionesBlockchainDia × diasPorMes × comisionPolygon
-Comisiones Smart Contract = 10 × 7 × 30 × $0.002 = $4.2/mes por flota
+Comisiones Smart Contract = 1 × 7 × 30 × $0.002 = $0.42/mes por flota
 ```
 
 ### 4. Cálculo de Ingresos
@@ -100,15 +158,15 @@ Comisiones Smart Contract = 10 × 7 × 30 × $0.002 = $4.2/mes por flota
 #### Ingresos Base (Ambas Tecnologías)
 ```
 Tarifa Base Fija = $149/mes (Plan Estándar)
-Tarifa por Dispositivo = 10 × $15 = $150/mes
+Tarifa por Dispositivo = 1 × $15 = $15/mes
 
-INGRESO BASE POR FLOTA = $149 + $150 = $299/mes
+INGRESO BASE POR FLOTA = $149 + $15 = $164/mes
 ```
 
-Para 10 dispositivos (EdgeBox-ESP-100):
+Para 1 dispositivo (EdgeBox-ESP-100):
 ```
-Ingreso Credits por Flota = $299/mes
-Ingreso Polygon por Flota = $299 + $4.2 = $303.2/mes (incluye comisiones SC)
+Ingreso Credits por Flota = $164/mes
+Ingreso Polygon por Flota = $164 + $0.42 = $164.42/mes (incluye comisiones SC)
 ```
 
 ### 5. Análisis de Rentabilidad
@@ -117,32 +175,32 @@ Ingreso Polygon por Flota = $299 + $4.2 = $303.2/mes (incluye comisiones SC)
 
 **Credits:**
 ```
-Ganancia = Ingreso - Costo = $299 - $212.1 = $86.9/mes
-ROI = (Ganancia ÷ Costo) × 100 = ($86.9 ÷ $212.1) × 100 = 41.0%
+Ganancia = Ingreso - Costo = $164 - $120.21 = $43.79/mes
+ROI = (Ganancia ÷ Costo) × 100 = ($43.79 ÷ $120.21) × 100 = 36.4%
 ```
 
 **Polygon:**
 ```
-Ganancia = Ingreso - Costo = $303.2 - $121.89 = $181.31/mes
-ROI = (Ganancia ÷ Costo) × 100 = ($181.31 ÷ $121.89) × 100 = 148.7%
+Ganancia = Ingreso - Costo = $164.42 - $30.189 = $134.23/mes
+ROI = (Ganancia ÷ Costo) × 100 = ($134.23 ÷ $30.189) × 100 = 444.6%
 ```
 
-#### Totales (10 Flotas)
+#### Totales (10 Flotas × 1 Dispositivo = 10 Dispositivos)
 
 **Credits:**
 ```
-Costo Total = $212.1 × 10 = $2,121/mes
-Ingreso Total = $299 × 10 = $2,990/mes
-Ganancia Total = $2,990 - $2,121 = $869/mes
-ROI Total = ($869 ÷ $2,121) × 100 = 41.0%
+Costo Total = $120.21 × 10 = $1,202.1/mes
+Ingreso Total = $164 × 10 = $1,640/mes
+Ganancia Total = $1,640 - $1,202.1 = $437.9/mes
+ROI Total = ($437.9 ÷ $1,202.1) × 100 = 36.4%
 ```
 
 **Polygon:**
 ```
-Costo Total = $121.89 × 10 = $1,218.9/mes
-Ingreso Total = $303.2 × 10 = $3,032/mes
-Ganancia Total = $3,032 - $1,218.9 = $1,813.1/mes
-ROI Total = ($1,813.1 ÷ $1,218.9) × 100 = 148.7%
+Costo Total = $30.189 × 10 = $301.9/mes
+Ingreso Total = $164.42 × 10 = $1,644.2/mes
+Ganancia Total = $1,644.2 - $301.9 = $1,342.3/mes
+ROI Total = ($1,342.3 ÷ $301.9) × 100 = 444.6%
 ```
 
 ### 6. Análisis CAPEX vs OPEX
@@ -152,36 +210,36 @@ ROI Total = ($1,813.1 ÷ $1,218.9) × 100 = 148.7%
 **Credits:**
 ```
 Dispositivos IoT = numFlotas × dispositivosFlota × precioDispositivo
-Dispositivos IoT = 10 × 10 × $147.5 = $14,750 (EdgeBox-ESP-100)
+Dispositivos IoT = 10 × 1 × $147.5 = $1,475 (EdgeBox-ESP-100)
 
 Infraestructura Anual = numNodos × costoAWSNodo × 12
 Infraestructura Anual = 4 × $150 × 12 = $7,200
 
-CAPEX Credits = $14,750 + $7,200 = $21,950
+CAPEX Credits = $1,475 + $7,200 = $8,675
 ```
 
 **Polygon:**
 ```
-Dispositivos IoT = $14,750 (igual que Credits)
+Dispositivos IoT = $1,475 (igual que Credits)
 
 Infraestructura Anual = infraPolygon × 12
 Infraestructura Anual = $200 × 12 = $2,400
 
-CAPEX Polygon = $14,750 + $2,400 = $17,150
+CAPEX Polygon = $1,475 + $2,400 = $3,875
 ```
 
 #### OPEX (Gastos Operacionales Mensual)
 
 **Credits:**
 ```
-OPEX = Costo Total Mensual = $2,121/mes
-OPEX Anual = $2,121 × 12 = $25,452/año
+OPEX = Costo Total Mensual = $1,202.1/mes
+OPEX Anual = $1,202.1 × 12 = $14,425/año
 ```
 
 **Polygon:**
 ```
-OPEX = Costo Total Mensual = $1,218.9/mes
-OPEX Anual = $1,218.9 × 12 = $14,627/año
+OPEX = Costo Total Mensual = $301.9/mes
+OPEX Anual = $301.9 × 12 = $3,623/año
 ```
 
 ### 7. Métricas Financieras Avanzadas
@@ -190,26 +248,26 @@ OPEX Anual = $1,218.9 × 12 = $14,627/año
 
 **Credits:**
 ```
-EBITDA Anual = Ganancia Mensual × 12 = $869 × 12 = $10,428/año
-Payback = CAPEX ÷ EBITDA Anual = $21,950 ÷ $10,428 = 2.11 años
+EBITDA Anual = Ganancia Mensual × 12 = $437.9 × 12 = $5,255/año
+Payback = CAPEX ÷ EBITDA Anual = $8,675 ÷ $5,255 = 1.65 años
 ```
 
 **Polygon:**
 ```
-EBITDA Anual = $1,813.1 × 12 = $21,757/año
-Payback = $17,150 ÷ $21,757 = 0.79 años
+EBITDA Anual = $1,342.3 × 12 = $16,108/año
+Payback = $3,875 ÷ $16,108 = 0.24 años (2.9 meses)
 ```
 
 #### IRR (Internal Rate of Return)
 
 **Credits:**
 ```
-IRR = (EBITDA Anual ÷ CAPEX) × 100 = ($10,428 ÷ $21,950) × 100 = 47.5%
+IRR = (EBITDA Anual ÷ CAPEX) × 100 = ($5,255 ÷ $8,675) × 100 = 60.6%
 ```
 
 **Polygon:**
 ```
-IRR = ($21,757 ÷ $17,150) × 100 = 126.9%
+IRR = ($16,108 ÷ $3,875) × 100 = 415.7%
 ```
 
 ### 8. Comparación de Tecnologías
@@ -218,18 +276,18 @@ IRR = ($21,757 ÷ $17,150) × 100 = 126.9%
 
 | Métrica | Credits | Polygon | Mejor |
 |---------|---------|---------|-------|
-| CAPEX | $21,950 | $17,150 | Polygon |
-| OPEX Mensual | $2,121 | $1,218.9 | Polygon |
-| Ganancia Mensual | $869 | $1,813.1 | Polygon |
-| ROI | 41.0% | 148.7% | Polygon |
-| Payback Period | 2.11 años | 0.79 años | Polygon |
-| IRR | 47.5% | 126.9% | Polygon |
+| CAPEX | $8,675 | $3,875 | Polygon |
+| OPEX Mensual | $1,202.1 | $301.9 | Polygon |
+| Ganancia Mensual | $437.9 | $1,342.3 | Polygon |
+| ROI | 36.4% | 444.6% | Polygon |
+| Payback Period | 1.65 años | 0.24 años | Polygon |
+| IRR | 60.6% | 415.7% | Polygon |
 
 #### Diferencias Clave
 
-1. **Diferencia de Ganancia:** $1,813.1 - $869 = $944.1/mes (Polygon mejor)
-2. **Diferencia de ROI:** 148.7% - 41.0% = 107.7% (Polygon mejor)
-3. **Diferencia de CAPEX:** $21,950 - $17,150 = $4,800 (Polygon menor)
+1. **Diferencia de Ganancia:** $1,342.3 - $437.9 = $904.4/mes (Polygon mejor)
+2. **Diferencia de ROI:** 444.6% - 36.4% = 408.2% (Polygon mejor)
+3. **Diferencia de CAPEX:** $8,675 - $3,875 = $4,800 (Polygon menor)
 
 ### 9. Factores de Costos Detallados
 
@@ -240,11 +298,11 @@ IRR = ($21,757 ÷ $17,150) × 100 = 126.9%
 
 **Blockchain (Credits):**
 - Transacciones: 7 tx/día × 30 días × $0.001 = $0.21/mes/dispositivo
-- Infraestructura: $110/flota ÷ 10 dispositivos = $11/mes/dispositivo
+- Infraestructura: $110/flota ÷ 1 dispositivo = $110/mes/dispositivo
 
 **Blockchain (Polygon):**
 - Gas: 7 tx/día × 30 días × $0.0009 = $0.189/mes/dispositivo
-- Infraestructura: $20/flota ÷ 10 dispositivos = $2/mes/dispositivo
+- Infraestructura: $20/flota ÷ 1 dispositivo = $20/mes/dispositivo
 - Comisión SC: 7 tx/día × 30 días × $0.002 = $0.42/mes/dispositivo (ingreso)
 
 ### 10. Supuestos y Limitaciones

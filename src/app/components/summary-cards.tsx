@@ -32,6 +32,14 @@ interface SummaryCardsProps {
 }
 
 export const SummaryCards: React.FC<SummaryCardsProps> = ({ totales, config }) => {
+  // Función para formatear números de manera consistente
+  const formatNumber = (num: number): string => {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(num);
+  };
+
   if (!totales || !totales.credits || !totales.polygon) {
     return (
       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 border border-white/20">
@@ -60,13 +68,13 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ totales, config }) =
     isPercentage?: boolean;
     isCurrency?: boolean;
   }) => {
-    const creditsDisplay = isCurrency ? `$${creditsValue.toFixed(2)}` : 
+    const creditsDisplay = isCurrency ? `$${formatNumber(creditsValue)}` : 
                           isPercentage ? `${creditsValue.toFixed(1)}%` : 
-                          creditsValue.toFixed(2);
+                          formatNumber(creditsValue);
     
-    const polygonDisplay = isCurrency ? `$${polygonValue.toFixed(2)}` : 
+    const polygonDisplay = isCurrency ? `$${formatNumber(polygonValue)}` : 
                           isPercentage ? `${polygonValue.toFixed(1)}%` : 
-                          polygonValue.toFixed(2);
+                          formatNumber(polygonValue);
 
     const creditsBetter = creditsValue > polygonValue;
     const polygonBetter = polygonValue > creditsValue;
@@ -134,7 +142,7 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ totales, config }) =
           
           <div className="bg-gradient-to-br from-purple-500/20 to-violet-500/10 backdrop-blur-sm rounded-xl p-4 border border-purple-500/30">
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-300 mb-1">{transaccionesMes.toLocaleString('en-US')}</div>
+              <div className="text-3xl font-bold text-purple-300 mb-1">{formatNumber(transaccionesMes)}</div>
               <div className="text-purple-200">Transacciones/Mes</div>
             </div>
           </div>
@@ -207,12 +215,12 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ totales, config }) =
         {polygon.roi > credits.roi ? (
           <p className="text-green-200">
             <strong>Polygon</strong> ofrece mejor rentabilidad con un ROI de {polygon.roi.toFixed(1)}% vs {credits.roi.toFixed(1)}% de Credits.
-            La ganancia adicional es de ${(polygon.ganancia - credits.ganancia).toFixed(2)}/mes.
+            La ganancia adicional es de ${formatNumber(polygon.ganancia - credits.ganancia)}/mes.
           </p>
         ) : (
           <p className="text-green-200">
             <strong>Credits</strong> ofrece mejor rentabilidad con un ROI de {credits.roi.toFixed(1)}% vs {polygon.roi.toFixed(1)}% de Polygon.
-            La ganancia adicional es de ${(credits.ganancia - polygon.ganancia).toFixed(2)}/mes.
+            La ganancia adicional es de ${formatNumber(credits.ganancia - polygon.ganancia)}/mes.
           </p>
         )}
       </div>
