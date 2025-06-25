@@ -46,7 +46,7 @@ export default function FleetCalculatorPage() {
     numFlotas: 10,
           dispositivosFlota: 1,
       transaccionesDia: 24,
-      precioDispositivo: 147.5,
+      precioDispositivo: 0,
     numNodos: 4,
     costoAWSNodo: 150,
     comisionCredits: 0.001,
@@ -64,7 +64,7 @@ export default function FleetCalculatorPage() {
     descuento500: 20,
     descuento1000: 30,
     // Propiedades adicionales necesarias para los componentes
-    dispositivoSeleccionado: 'edgebox-esp100',
+    dispositivoSeleccionado: 'dispositivo-gratuito',
     soporteLatAm: 0.145,
     mbPorTransaccion: 0.1,
     transaccionesBlockchainDia: 7,
@@ -225,7 +225,20 @@ export default function FleetCalculatorPage() {
         </h1>
         <GeneralConfig 
           config={config} 
-          updateConfig={(key: any, value: any) => setConfig(prev => ({ ...prev, [key]: value }))}
+          updateConfig={(key: any, value: any) => {
+            const numericFields = [
+              'numFlotas', 'dispositivosFlota', 'transaccionesDia', 'precioDispositivo',
+              'costoPlanDatos', 'tarifaBaseFija', 'tarifaBase', 'descuento100', 
+              'descuento500', 'descuento1000', 'soporteLatAm', 'mbPorTransaccion',
+              'transaccionesBlockchainDia', 'factorEscala', 'costoInstalacion',
+              'costoMantenimientoDispositivo', 'mbTransaccion'
+            ];
+            
+            const processedValue = numericFields.includes(key) ? 
+              (value === '' ? 0 : parseFloat(value) || 0) : value;
+            
+            setConfig(prev => ({ ...prev, [key]: processedValue }));
+          }}
           cambiarPlan={actualizarTarifas}
           isExpanded={true}
           onToggle={() => {}}
@@ -237,13 +250,31 @@ export default function FleetCalculatorPage() {
         />
         <CreditsConfig 
           config={config} 
-          updateConfig={(key: any, value: any) => setConfig(prev => ({ ...prev, [key]: value }))}
+          updateConfig={(key: any, value: any) => {
+            const numericFields = [
+              'numNodos', 'costoAWSNodo', 'comisionCredits', 'mantenimientoCredits'
+            ];
+            
+            const processedValue = numericFields.includes(key) ? 
+              (value === '' ? 0 : parseFloat(value) || 0) : value;
+            
+            setConfig(prev => ({ ...prev, [key]: processedValue }));
+          }}
           isExpanded={true}
           onToggle={() => {}}
         />
         <PolygonConfig 
           config={config} 
-          updateConfig={(key: any, value: any) => setConfig(prev => ({ ...prev, [key]: value }))}
+          updateConfig={(key: any, value: any) => {
+            const numericFields = [
+              'gasPolygon', 'precioMatic', 'comisionPolygon', 'infraPolygon'
+            ];
+            
+            const processedValue = numericFields.includes(key) ? 
+              (value === '' ? 0 : parseFloat(value) || 0) : value;
+            
+            setConfig(prev => ({ ...prev, [key]: processedValue }));
+          }}
           isExpanded={true}
           onToggle={() => {}}
         />

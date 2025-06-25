@@ -55,6 +55,19 @@ const GeneralConfig: React.FC<GeneralConfigProps> = ({
 }) => {
   const dispositivos: DeviceType[] = [
     {
+      id: 'dispositivo-gratuito',
+      name: 'Dispositivo Gratuito/Prestado',
+      priceRange: [0, 0],
+      avgPrice: 0,
+      simCost: [5, 15],
+      avgSimCost: 10,
+      industry: 'Modelo SaaS',
+      autonomy: 'Variable',
+      protocols: ['MQTT', 'HTTP', 'TCP'],
+      certifications: ['Variable'],
+      notes: 'Dispositivo proporcionado sin costo - Solo costos operacionales'
+    },
+    {
       id: 'queclink-gv600',
       name: 'Queclink GV600/WG',
       priceRange: [110, 225],
@@ -143,7 +156,7 @@ const GeneralConfig: React.FC<GeneralConfigProps> = ({
     }
   };
 
-  const selectedDevice = dispositivos.find(d => d.id === config.dispositivoSeleccionado) || dispositivos[1];
+  const selectedDevice = dispositivos.find(d => d.id === config.dispositivoSeleccionado) || dispositivos[0];
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 border border-white/20">
       <div 
@@ -215,7 +228,7 @@ const GeneralConfig: React.FC<GeneralConfigProps> = ({
                 Tipo de Dispositivo IoT
               </label>
               <select
-                value={config.dispositivoSeleccionado || 'teltonika-fmb125'}
+                value={config.dispositivoSeleccionado || 'dispositivo-gratuito'}
                 onChange={(e) => handleDeviceChange(e.target.value)}
                 className="w-full p-3 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
@@ -275,10 +288,16 @@ const GeneralConfig: React.FC<GeneralConfigProps> = ({
                 className="w-full p-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 min="0"
                 step="0.01"
+                placeholder="0 para dispositivo gratuito"
               />
-              <p className="text-xs text-gray-400 mt-1">
-                Rango sugerido: ${selectedDevice.priceRange[0]} - ${selectedDevice.priceRange[1]}
-              </p>
+              <div className="text-xs text-gray-400 mt-1">
+                <p>Rango sugerido: ${selectedDevice.priceRange[0]} - ${selectedDevice.priceRange[1]}</p>
+                {config.precioDispositivo === 0 && (
+                  <p className="text-yellow-400 mt-1">
+                    💡 Dispositivo gratuito/prestado - Solo se considerarán costos operacionales
+                  </p>
+                )}
+              </div>
             </div>
             </div>
             

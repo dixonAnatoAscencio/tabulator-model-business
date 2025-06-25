@@ -11,7 +11,7 @@ const configDefaults = {
   numFlotas: 10,                    // Número de flotas a analizar
   dispositivosFlota: 1,             // Dispositivos por flota (ACTUALIZADO)
   transaccionesDia: 24,             // Eventos IoT por día (ej: GPS cada hora)
-  precioDispositivo: 147.5,         // Precio unitario del dispositivo (EdgeBox-ESP-100)
+  precioDispositivo: 0,             // Precio unitario del dispositivo (Gratuito/Prestado)
   costoPlanDatos: 10,               // Costo mensual del plan SIM
   transaccionesBlockchainDia: 7,    // Transacciones blockchain por día
   diasPorMes: 30,                   // Días considerados por mes
@@ -210,22 +210,22 @@ ROI Total = ($1,342.3 ÷ $301.9) × 100 = 444.6%
 **Credits:**
 ```
 Dispositivos IoT = numFlotas × dispositivosFlota × precioDispositivo
-Dispositivos IoT = 10 × 1 × $147.5 = $1,475 (EdgeBox-ESP-100)
+Dispositivos IoT = 10 × 1 × $0 = $0 (Dispositivo Gratuito/Prestado)
 
 Infraestructura Anual = numNodos × costoAWSNodo × 12
 Infraestructura Anual = 4 × $150 × 12 = $7,200
 
-CAPEX Credits = $1,475 + $7,200 = $8,675
+CAPEX Credits = $0 + $7,200 = $7,200
 ```
 
 **Polygon:**
 ```
-Dispositivos IoT = $1,475 (igual que Credits)
+Dispositivos IoT = $0 (igual que Credits - Dispositivo Gratuito)
 
 Infraestructura Anual = infraPolygon × 12
 Infraestructura Anual = $200 × 12 = $2,400
 
-CAPEX Polygon = $1,475 + $2,400 = $3,875
+CAPEX Polygon = $0 + $2,400 = $2,400
 ```
 
 #### OPEX (Gastos Operacionales Mensual)
@@ -249,25 +249,25 @@ OPEX Anual = $301.9 × 12 = $3,623/año
 **Credits:**
 ```
 EBITDA Anual = Ganancia Mensual × 12 = $437.9 × 12 = $5,255/año
-Payback = CAPEX ÷ EBITDA Anual = $8,675 ÷ $5,255 = 1.65 años
+Payback = CAPEX ÷ EBITDA Anual = $7,200 ÷ $5,255 = 1.37 años
 ```
 
 **Polygon:**
 ```
 EBITDA Anual = $1,342.3 × 12 = $16,108/año
-Payback = $3,875 ÷ $16,108 = 0.24 años (2.9 meses)
+Payback = $2,400 ÷ $16,108 = 0.15 años (1.8 meses)
 ```
 
 #### IRR (Internal Rate of Return)
 
 **Credits:**
 ```
-IRR = (EBITDA Anual ÷ CAPEX) × 100 = ($5,255 ÷ $8,675) × 100 = 60.6%
+IRR = (EBITDA Anual ÷ CAPEX) × 100 = ($5,255 ÷ $7,200) × 100 = 73.0%
 ```
 
 **Polygon:**
 ```
-IRR = ($16,108 ÷ $3,875) × 100 = 415.7%
+IRR = ($16,108 ÷ $2,400) × 100 = 671.2%
 ```
 
 ### 8. Comparación de Tecnologías
@@ -276,18 +276,18 @@ IRR = ($16,108 ÷ $3,875) × 100 = 415.7%
 
 | Métrica | Credits | Polygon | Mejor |
 |---------|---------|---------|-------|
-| CAPEX | $8,675 | $3,875 | Polygon |
+| CAPEX | $7,200 | $2,400 | Polygon |
 | OPEX Mensual | $1,202.1 | $301.9 | Polygon |
 | Ganancia Mensual | $437.9 | $1,342.3 | Polygon |
 | ROI | 36.4% | 444.6% | Polygon |
-| Payback Period | 1.65 años | 0.24 años | Polygon |
-| IRR | 60.6% | 415.7% | Polygon |
+| Payback Period | 1.37 años | 0.15 años | Polygon |
+| IRR | 73.0% | 671.2% | Polygon |
 
 #### Diferencias Clave
 
 1. **Diferencia de Ganancia:** $1,342.3 - $437.9 = $904.4/mes (Polygon mejor)
 2. **Diferencia de ROI:** 444.6% - 36.4% = 408.2% (Polygon mejor)
-3. **Diferencia de CAPEX:** $8,675 - $3,875 = $4,800 (Polygon menor)
+3. **Diferencia de CAPEX:** $7,200 - $2,400 = $4,800 (Polygon menor)
 
 ### 9. Factores de Costos Detallados
 
@@ -314,6 +314,7 @@ IRR = ($16,108 ÷ $3,875) × 100 = 415.7%
 4. Infraestructura escalable linealmente
 5. **Descuentos por volumen eliminados** (no se calculan en versión actual)
 6. Eventos IoT totales: 24/día, Transacciones blockchain: 7/día
+7. **Dispositivos IoT gratuitos/prestados** (Modelo SaaS sin venta de hardware)
 
 #### Limitaciones
 1. No incluye costos de desarrollo inicial
@@ -327,5 +328,41 @@ IRR = ($16,108 ÷ $3,875) × 100 = 415.7%
 - Se distingue entre eventos IoT generales (24/día) y transacciones blockchain (7/día)
 - El período de recuperación se calcula en años (CAPEX ÷ ganancia anual)
 - Los ingresos de Polygon incluyen comisiones de smart contracts como ingresos adicionales
+
+### 11. Modelo de Dispositivo Gratuito y Plan Personalizado
+
+#### Dispositivo IoT en $0 (Gratuito/Prestado)
+Cuando se configura el precio del dispositivo IoT en $0:
+
+**❌ NO se cobra:**
+- Costo inicial del dispositivo IoT
+- Depreciación del hardware
+- Seguros del dispositivo
+- Reparaciones o reemplazos de hardware
+
+**✅ SÍ se cobra:**
+- Plan de datos SIM ($10/mes por dispositivo)
+- Transacciones blockchain (Credits: $0.21/mes, Polygon: $0.189/mes)
+- Infraestructura de red (Credits: $110/flota, Polygon: $20/flota)
+- Servicios de plataforma (tarifa base fija y por dispositivo)
+
+#### Plan Personalizado con Tarifas en $0
+Cuando se configura el plan personalizado con tarifas en $0:
+
+**Tarifa Base Fija = $0:**
+- ❌ NO se cobra cuota mensual fija por acceso a la plataforma
+- ❌ NO se cobra por panel de control o dashboard
+- ❌ NO se cobra por APIs básicas
+
+**Tarifa por Dispositivo = $0:**
+- ❌ NO se cobra cuota mensual por cada dispositivo conectado
+- ❌ NO se cobra por funcionalidades básicas de monitoreo
+- ❌ NO se cobra por alertas estándar
+
+**Costos que SIEMPRE se mantienen (no afectados por el plan):**
+- ✅ Conectividad SIM/datos
+- ✅ Transacciones blockchain (gas fees o comisiones)
+- ✅ Infraestructura de red blockchain
+- ✅ Comisiones de smart contracts (solo Polygon - como ingreso)
 
 
