@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { DollarSign, ChevronDown, ChevronUp } from 'lucide-react';
+import { DollarSign  } from 'lucide-react';
 
 interface PricingModelProps {
   config: any;

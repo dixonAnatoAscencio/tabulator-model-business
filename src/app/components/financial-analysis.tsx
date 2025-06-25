@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { TrendingUp, DollarSign, BarChart3, Calculator, PieChart, Target } from 'lucide-react';
+import { TrendingUp, Calculator, PieChart, Target } from 'lucide-react';
 
 interface Totales {
   credits: {
@@ -97,22 +97,6 @@ export const FinancialAnalysis: React.FC<FinancialAnalysisProps> = ({ totales, c
     comisionesPolygon: config.numFlotas * config.dispositivosFlota * config.transaccionesBlockchainDia * 30 * config.comisionPolygon,
   };
 
-  const MetricCard = ({ title, value, subtitle, color, icon: Icon }: {
-    title: string;
-    value: string;
-    subtitle?: string;
-    color: string;
-    icon: React.ElementType;
-  }) => (
-    <div className={`bg-${color}-500/10 border border-${color}-500/20 rounded-xl p-6`}>
-      <div className="flex items-center space-x-3 mb-3">
-        <Icon className={`w-6 h-6 text-${color}-400`} />
-        <h3 className="text-lg font-semibold text-white">{title}</h3>
-      </div>
-      <div className={`text-3xl font-bold text-${color}-300 mb-1`}>{value}</div>
-      {subtitle && <div className="text-sm text-gray-400">{subtitle}</div>}
-    </div>
-  );
 
   return (
     <div className="space-y-8">

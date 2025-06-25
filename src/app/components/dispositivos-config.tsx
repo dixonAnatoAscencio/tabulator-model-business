@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { Smartphone, Truck, MapPin, DollarSign, ChevronDown, ChevronUp, Info } from 'lucide-react';
+import { Smartphone, DollarSign, ChevronDown, ChevronUp, Info } from 'lucide-react';
 
 interface DeviceType {
   id: string;

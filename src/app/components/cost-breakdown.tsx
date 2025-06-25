@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { Calculator, Smartphone, Wifi, Cpu, DollarSign, Activity } from 'lucide-react';
+import { Calculator, Wifi, Cpu, Activity } from 'lucide-react';
 
 interface Config {
   numFlotas: number;
@@ -61,24 +61,6 @@ export const CostBreakdown: React.FC<CostBreakdownProps> = ({ config }) => {
   const comisionPorFlotaPolygon = config.dispositivosFlota * comisionPorDispositivoPolygon;
   const comisionTotalPolygon = comisionPorFlotaPolygon * config.numFlotas;
 
-  const CostCard = ({ title, amount, subtitle, icon: Icon, color = "blue" }: {
-    title: string;
-    amount: number;
-    subtitle?: string;
-    icon: React.ElementType;
-    color?: string;
-  }) => (
-    <div className={`bg-${color}-500/10 border border-${color}-500/20 rounded-lg p-4`}>
-      <div className="flex items-center space-x-2 mb-2">
-        <Icon className={`w-5 h-5 text-${color}-400`} />
-        <h4 className={`font-medium text-${color}-300 text-sm`}>{title}</h4>
-      </div>
-      <div className={`text-xl font-bold text-${color}-400`}>
-        ${amount.toFixed(2)}
-      </div>
-      {subtitle && <div className="text-xs text-gray-400 mt-1">{subtitle}</div>}
-    </div>
-  );
 
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 border border-white/20">
