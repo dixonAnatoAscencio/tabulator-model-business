@@ -17,7 +17,8 @@ interface Flota {
   transMes: number;
   costoCredits: number;
   costoPolygon: number;
-  ingreso: number;
+  ingresoCredits: number;
+  ingresoPolygon: number;
   roiCredits: number;
   roiPolygon: number;
   descuento: number;
@@ -159,7 +160,8 @@ export default function FleetCalculatorPage() {
         transMes,
         costoCredits,
         costoPolygon,
-        ingreso: ingresoCredits, // Mostramos el ingreso base en la tabla
+        ingresoCredits,
+        ingresoPolygon,
         roiCredits,
         roiPolygon,
         descuento: desc,
@@ -195,9 +197,9 @@ export default function FleetCalculatorPage() {
   };
 
   const exportarCSV = () => {
-    let csv = 'Flota,Dispositivos,Transacciones/Mes,Costo Credits,Costo Polygon,Ingreso,ROI Credits,ROI Polygon\n';
+    let csv = 'Flota,Dispositivos,Transacciones/Mes,Costo Credits,Costo Polygon,Ingreso Credits,Ingreso Polygon,ROI Credits,ROI Polygon\n';
     resultados.flotas.forEach((f) => {
-      csv += `${f.id},${f.dispositivos},${f.transMes},${f.costoCredits.toFixed(2)},${f.costoPolygon.toFixed(2)},${f.ingreso.toFixed(2)},${f.roiCredits.toFixed(2)}%,${f.roiPolygon.toFixed(2)}%\n`;
+      csv += `${f.id},${f.dispositivos},${f.transMes},${f.costoCredits.toFixed(2)},${f.costoPolygon.toFixed(2)},${f.ingresoCredits.toFixed(2)},${f.ingresoPolygon.toFixed(2)},${f.roiCredits.toFixed(2)}%,${f.roiPolygon.toFixed(2)}%\n`;
     });
     csv += '\nResumen General\n';
     csv += 'Métrica,Credits,Polygon\n';

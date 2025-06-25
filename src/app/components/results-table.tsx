@@ -9,7 +9,8 @@ interface Flota {
   transMes: number;
   costoCredits: number;
   costoPolygon: number;
-  ingreso: number;
+  ingresoCredits: number;
+  ingresoPolygon: number;
   roiCredits: number;
   roiPolygon: number;
   descuento: number;
@@ -55,7 +56,8 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ flotas }) => {
               <th className="text-left p-3 text-gray-300">Transacciones/Mes</th>
               <th className="text-left p-3 text-gray-300">Costo Credits</th>
               <th className="text-left p-3 text-gray-300">Costo Polygon</th>
-              <th className="text-left p-3 text-gray-300">Ingreso</th>
+              <th className="text-left p-3 text-gray-300">Ingreso Credits</th>
+              <th className="text-left p-3 text-gray-300">Ingreso Polygon</th>
               <th className="text-left p-3 text-gray-300">ROI Credits</th>
               <th className="text-left p-3 text-gray-300">ROI Polygon</th>
               <th className="text-left p-3 text-gray-300">Descuento</th>
@@ -69,7 +71,8 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ flotas }) => {
                 <td className="p-3 text-gray-300">{formatNumber(flota.transMes)}</td>
                 <td className="p-3 text-red-400">${flota.costoCredits.toFixed(2)}</td>
                 <td className="p-3 text-orange-400">${flota.costoPolygon.toFixed(2)}</td>
-                <td className="p-3 text-green-400">${flota.ingreso.toFixed(2)}</td>
+                <td className="p-3 text-green-400">${flota.ingresoCredits.toFixed(2)}</td>
+                <td className="p-3 text-green-500">${flota.ingresoPolygon.toFixed(2)}</td>
                 <td className="p-3">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
                     flota.roiCredits > 0 ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
@@ -97,7 +100,7 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ flotas }) => {
           <TrendingUp className="w-5 h-5 text-green-400" />
           <h3 className="text-lg font-medium text-white">Resumen</h3>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
           <div className="text-center">
             <div className="text-2xl font-bold text-white">{flotas.length}</div>
             <div className="text-gray-300">Flotas</div>
@@ -110,9 +113,15 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ flotas }) => {
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-400">
-              ${flotas.reduce((sum, f) => sum + f.ingreso, 0).toFixed(0)}
+              ${flotas.reduce((sum, f) => sum + f.ingresoCredits, 0).toFixed(0)}
             </div>
-            <div className="text-gray-300">Ingreso Total</div>
+            <div className="text-gray-300">Ingreso Credits</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-500">
+              ${flotas.reduce((sum, f) => sum + f.ingresoPolygon, 0).toFixed(0)}
+            </div>
+            <div className="text-gray-300">Ingreso Polygon</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-400">
