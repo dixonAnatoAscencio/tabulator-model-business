@@ -365,4 +365,65 @@ Cuando se configura el plan personalizado con tarifas en $0:
 - ✅ Infraestructura de red blockchain
 - ✅ Comisiones de smart contracts (solo Polygon - como ingreso)
 
+### 12. Período de Recuperación "N/A" - Explicación
+
+#### ¿Por qué aparece "N/A" en el Período de Recuperación?
+
+El período de recuperación muestra **"N/A"** (No Aplicable) cuando la configuración resulta en **pérdidas operacionales** en lugar de ganancias. Esto ocurre en los siguientes escenarios:
+
+#### Escenario 1: Plan Personalizado con Tarifas en $0
+```
+Configuración: Tarifa Base Fija = $0, Tarifa por Dispositivo = $0
+
+Resultado por Flota:
+Credits:  Ingreso = $0,    Costo = $120.21 → Ganancia = -$120.21 (PÉRDIDA)
+Polygon:  Ingreso = $0.42, Costo = $30.19  → Ganancia = -$29.77  (PÉRDIDA)
+
+Período de Recuperación = N/A (Imposible recuperar inversión con pérdidas)
+```
+
+#### Escenario 2: Costos Operacionales Superiores a Ingresos
+```
+Si los costos de infraestructura, SIM o blockchain superan los ingresos del plan,
+el resultado será una pérdida operacional y por tanto "N/A".
+```
+
+#### Interpretación del "N/A"
+
+**✅ Matemáticamente Correcto:**
+- No es posible calcular período de recuperación si no hay ganancia neta
+- La fórmula `CAPEX ÷ Ganancia Anual` no aplica con ganancias negativas
+
+**✅ Conceptualmente Válido:**
+- **Modelo Freemium**: Servicios gratuitos para atraer usuarios
+- **Período de Prueba**: Evaluar valor antes de facturar
+- **Partnerships Estratégicos**: Absorber costos por beneficios a largo plazo
+- **Subsidio Operacional**: Costos cubiertos por otros ingresos
+
+#### Casos de Uso para Configuración $0/$0
+
+1. **🔬 Pilotos y POCs (Proof of Concept)**
+   - Demostrar valor técnico antes de negociar precios
+   - Validar casos de uso específicos
+
+2. **🎯 Estrategia de Penetración de Mercado**
+   - Ganar market share antes de monetizar
+   - Crear dependencia tecnológica
+
+3. **🤝 Modelos B2B Complejos**
+   - Parte de contratos más amplios
+   - Servicios incluidos en otros productos
+
+4. **📊 Recolección de Datos**
+   - Obtener datos valiosos para análisis
+   - Entrenar modelos de ML/IA
+
+#### Recomendaciones
+
+**Si ves "N/A" constantemente:**
+- ✅ Revisar estructura de costos (reducir infraestructura)
+- ✅ Ajustar modelo de precios (incrementar tarifas mínimas)
+- ✅ Optimizar eficiencia operacional
+- ✅ Considerar modelos de ingresos alternativos (comisiones, publicidad, datos)
+
 

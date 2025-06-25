@@ -175,6 +175,10 @@ export default function FleetCalculatorPage() {
     const gananciaCredits = ingresoTotal - totalCredits;
     const gananciaPolygon = ingresoTotalPolygon - totalPolygon;
 
+    // CAPEX incluye dispositivos + infraestructura anualizada
+    const capexCredits = inversion + (fijosCredits * 12);
+    const capexPolygon = inversion + (fijosPolygon * 12);
+
     setResultados({
       flotas,
       totales: {
@@ -183,14 +187,14 @@ export default function FleetCalculatorPage() {
           ingreso: ingresoTotal,
           ganancia: gananciaCredits,
           roi: (gananciaCredits / totalCredits) * 100,
-          recuperacion: gananciaCredits > 0 ? inversion / (gananciaCredits * 12) : null, // Recuperación en años
+          recuperacion: gananciaCredits > 0 ? capexCredits / (gananciaCredits * 12) : null, // Recuperación en años
         },
         polygon: {
           costo: totalPolygon,
           ingreso: ingresoTotalPolygon,
           ganancia: gananciaPolygon,
           roi: (gananciaPolygon / totalPolygon) * 100,
-          recuperacion: gananciaPolygon > 0 ? inversion / (gananciaPolygon * 12) : null, // Recuperación en años
+          recuperacion: gananciaPolygon > 0 ? capexPolygon / (gananciaPolygon * 12) : null, // Recuperación en años
         },
       },
     });
