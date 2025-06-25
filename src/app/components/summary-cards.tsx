@@ -20,11 +20,18 @@ interface Totales {
   };
 }
 
-interface SummaryCardsProps {
-  totales: Totales;
+interface Config {
+  numFlotas: number;
+  dispositivosFlota: number;
+  transaccionesBlockchainDia: number;
 }
 
-export const SummaryCards: React.FC<SummaryCardsProps> = ({ totales }) => {
+interface SummaryCardsProps {
+  totales: Totales;
+  config?: Config;
+}
+
+export const SummaryCards: React.FC<SummaryCardsProps> = ({ totales, config }) => {
   if (!totales || !totales.credits || !totales.polygon) {
     return (
       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 border border-white/20">
@@ -98,11 +105,41 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ totales }) => {
     );
   };
 
+  // Cálculos generales
+  const totalDispositivos = config ? config.numFlotas * config.dispositivosFlota : 0;
+  const transaccionesMes = config ? totalDispositivos * config.transaccionesBlockchainDia * 30 : 0;
+
   return (
     <div className="mb-6">
       <h2 className="text-2xl font-bold text-white mb-6 text-center">
         📊 Resumen Comparativo
       </h2>
+      
+      {/* Métricas Generales */}
+      {config && (
+        <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-gradient-to-br from-blue-500/20 to-indigo-500/10 backdrop-blur-sm rounded-xl p-4 border border-blue-500/30">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-300 mb-1">{config.numFlotas}</div>
+              <div className="text-blue-200">Flotas</div>
+            </div>
+          </div>
+          
+          <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/10 backdrop-blur-sm rounded-xl p-4 border border-green-500/30">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-300 mb-1">{totalDispositivos}</div>
+              <div className="text-green-200">Dispositivos</div>
+            </div>
+          </div>
+          
+          <div className="bg-gradient-to-br from-purple-500/20 to-violet-500/10 backdrop-blur-sm rounded-xl p-4 border border-purple-500/30">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-purple-300 mb-1">{transaccionesMes.toLocaleString('en-US')}</div>
+              <div className="text-purple-200">Transacciones/Mes</div>
+            </div>
+          </div>
+        </div>
+      )}
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
@@ -150,14 +187,14 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ totales }) => {
             <div className="text-center p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
               <div className="text-red-300 font-medium mb-2">Credits</div>
               <div className="text-2xl font-bold text-red-300">
-                {credits.recuperacion ? `${credits.recuperacion.toFixed(1)} meses` : 'N/A'}
+                {credits.recuperacion ? `${credits.recuperacion.toFixed(1)} años` : 'N/A'}
               </div>
             </div>
             
             <div className="text-center p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg">
               <div className="text-purple-300 font-medium mb-2">Polygon</div>
               <div className="text-2xl font-bold text-purple-300">
-                {polygon.recuperacion ? `${polygon.recuperacion.toFixed(1)} meses` : 'N/A'}
+                {polygon.recuperacion ? `${polygon.recuperacion.toFixed(1)} años` : 'N/A'}
               </div>
             </div>
           </div>

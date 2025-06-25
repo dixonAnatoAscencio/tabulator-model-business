@@ -43,9 +43,9 @@ interface Totales {
 export default function FleetCalculatorPage() {
   const [config, setConfig] = useState({
     numFlotas: 10,
-    dispositivosFlota: 10,
-    transaccionesDia: 24,
-    precioDispositivo: 147.5,
+          dispositivosFlota: 10,
+      transaccionesDia: 24,
+      precioDispositivo: 147.5,
     numNodos: 4,
     costoAWSNodo: 150,
     comisionCredits: 0.001,
@@ -117,9 +117,7 @@ export default function FleetCalculatorPage() {
   };
 
   const calcularDescuento = (totalDispositivos: number) => {
-    if (totalDispositivos >= 1000) return config.descuento1000;
-    if (totalDispositivos >= 500) return config.descuento500;
-    if (totalDispositivos >= 100) return config.descuento100;
+    // Descuentos por volumen no se calculan según la configuración actual
     return 0;
   };
 
@@ -169,7 +167,8 @@ export default function FleetCalculatorPage() {
     }
 
     // Calcular ingreso total de Polygon (incluye comisiones SC)
-    const ingresoTotalPolygon = ingresoTotal + (config.numFlotas * config.dispositivosFlota * config.transaccionesBlockchainDia * 30 * config.comisionPolygon);
+    const comisionesTotalesPolygon = config.numFlotas * config.dispositivosFlota * config.transaccionesBlockchainDia * 30 * config.comisionPolygon;
+    const ingresoTotalPolygon = ingresoTotal + comisionesTotalesPolygon;
     
     const gananciaCredits = ingresoTotal - totalCredits;
     const gananciaPolygon = ingresoTotalPolygon - totalPolygon;
@@ -249,7 +248,7 @@ export default function FleetCalculatorPage() {
         <PricingModel config={config} setConfig={setConfig} actualizarTarifas={actualizarTarifas} />
         <CostBreakdown config={config} />
         <ResultsTable flotas={resultados.flotas} />
-        <SummaryCards totales={resultados.totales} />
+        <SummaryCards totales={resultados.totales} config={config} />
         <FinancialAnalysis totales={resultados.totales} config={config} />
         <div className="text-center mt-10">
           <button onClick={exportarCSV} className="bg-gradient-to-r from-indigo-500 to-purple-500 px-6 py-3 rounded-xl text-white font-semibold hover:shadow-lg">

@@ -254,6 +254,8 @@ IRR = ($21,757 ÷ $17,150) × 100 = 126.9%
 2. Uso constante de transacciones blockchain (7 por día)
 3. No se consideran fluctuaciones de red en gas fees
 4. Infraestructura escalable linealmente
+5. **Descuentos por volumen eliminados** (no se calculan en versión actual)
+6. Eventos IoT totales: 24/día, Transacciones blockchain: 7/día
 
 #### Limitaciones
 1. No incluye costos de desarrollo inicial
@@ -261,5 +263,11 @@ IRR = ($21,757 ÷ $17,150) × 100 = 126.9%
 3. Supone 100% de utilización de dispositivos
 4. No incluye costos de soporte técnico especializado
 5. Análisis basado en condiciones actuales de mercado
+
+#### Notas de Implementación
+- Los cálculos excluyen descuentos por volumen según configuración actual
+- Se distingue entre eventos IoT generales (24/día) y transacciones blockchain (7/día)
+- El período de recuperación se calcula en años (CAPEX ÷ ganancia anual)
+- Los ingresos de Polygon incluyen comisiones de smart contracts como ingresos adicionales
 
 
